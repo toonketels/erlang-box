@@ -1,0 +1,4 @@
+- hosts: default
+  roles:
+    - common
+    - stwind.erlang

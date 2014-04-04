@@ -1,0 +1,32 @@
+- action: shell whoami
+  register: whoami
+
+- name: update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  sudo: yes
+
+- name: upgrade the distro
+  apt: upgrade=yes
+  sudo: yes
+
+- name: install packages
+  apt: pkg={{ item }} state=latest
+  sudo: yes
+  with_items:
+    - build-essential
+    - git
+    - tree
+    - vim
+    - psmisc
+    - curl
+    - zip
+    - rsync
+    - wget
+    - unattended-upgrades
+
+- name: ensure /srv/data/git/ exists
+  file: path=/srv/data/git state=directory recurse=yes owner={{ whoami.stdout }} group={{ whoami.stdout }}
+  sudo: yes
+
+- name: ensure ~/git is a symlink to /srv/data/git
+  file: path=~/git state=link src=/srv/data/git
